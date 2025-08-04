@@ -1,3 +1,4 @@
+------
 Linux distributions (distros) are different versions of Linux that package the Linux kernel with various software, system utilities, and package managers. Each distro is designed for different use cases, such as personal computing, server management, or security.
 
 Here are some popular Linux distributions:
@@ -19,3 +20,105 @@ Useful References:
 Linux Kernel Source code: http://git.kernel.org/
 
 Mirror of Linux Kernel on GitHub: http://github.com/torvalds/linux
+--------------------------------------------------------------------
+Setup Linux Environment on Windows and MacOS
+There are multiple ways to setup a Linux environment on a Windows or Mac machines such as cloud vm, wsl2, virtualbox, Hyperkit e.t.c.,. However what I would recommend is using a container as a Linux environment.
+
+Just install Docker desktop, run the below command and create linux container of any distribution without worrying about the cost and connectivity issues.
+
+Docker Command to Run Ubuntu Linux Container in windows host (Persistent & Long-Term)
+Create a folder with name ubuntu-data in your downloads folder.
+
+Then run the below command in poweshell updating your username.
+
+docker run -dit `
+  --name ubuntu-container `
+  --hostname ubuntu-dev `
+  --restart unless-stopped `
+  --cpus="2" `
+  --memory="4g" `
+  --mount type=bind,source="C:/Users/Monica Korla/Downloads/ubuntu-container",target=/data `
+  -v /var/run/docker.sock:/var/run/docker.sock `
+  -p 2222:22 `
+  -p 8080:80 `
+  --env TZ=Asia/Kolkata `
+  --env LANG=en_US.UTF-8 `
+  ubuntu:latest /bin/bash              
+Docker Command to Run Ubuntu Linux Container in mac or linux host (Persistent & Long-Term)
+docker run -dit \
+  --name ubuntu-container \
+  --hostname ubuntu-dev \
+  --restart unless-stopped \
+  --cpus="2" \
+  --memory="4g" \
+  --mount type=bind,source=/tmp/ubuntu-data,target=/data \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -p 2222:22 \
+  -p 8080:80 \
+  --env TZ=Asia/Kolkata \
+  --env LANG=en_US.UTF-8 \
+  ubuntu:latest /bin/bash
+                 
+Explanation of Each Parameter
+Parameter	Description
+-dit	Runs the container in detached (-d), interactive (-i), and terminal (-t) mode.
+--name ubuntu-container	Assigns a name to the container for easy management.
+--hostname ubuntu-dev	Sets the container’s hostname.
+--restart unless-stopped	Ensures the container restarts automatically unless manually stopped.
+--cpus="2"	Limits the container to 2 CPU cores.
+--memory="4g"	Allocates 4GB RAM to the container.
+--mount type=bind,source=C:/ubuntu-data,target=/data	Mounts a folder from Windows into the container to persist data.
+-v /var/run/docker.sock:/var/run/docker.sock	Allows running Docker commands inside the container (optional).
+-p 2222:22	Maps port 2222 on the host to 22 (SSH) inside the container.
+-p 8080:80	Maps port 8080 on the host to 80 (for web services).
+--env TZ=Asia/Kolkata	Sets the timezone (modify based on your location).
+--env LANG=en_US.UTF-8	Sets the language settings inside the container.
+ubuntu:latest /bin/bash	Uses the latest Ubuntu image and runs Bash shell.
+------------------------------------------------------------------------------
+📌 What is a Package Manager?
+A package manager is a tool that automates the process of installing, updating, configuring, and removing software in a Linux system. It ensures that software and its dependencies are managed efficiently.
+
+🔍 How Does a Package Manager Work?
+Repositories (Repos):
+
+A package manager fetches software from official repositories (online storage of packages).
+Example: Ubuntu gets packages from archive.ubuntu.com.
+Installing Software:
+
+When you install software, the package manager: ✅ Downloads the package from the repository. ✅ Resolves dependencies (installs additional required software). ✅ Installs and configures the software automatically.
+Updating Software:
+
+A single command updates all installed packages to the latest version.
+Removing Software:
+
+The package manager also removes software cleanly without leaving unnecessary files.
+🛠 Essential Package Manager Commands
+APT (Debian, Ubuntu)
+sudo apt update         # Update package lists
+sudo apt upgrade -y     # Upgrade installed packages
+sudo apt install nginx  # Install a package
+sudo apt remove nginx   # Remove a package
+sudo apt autoremove     # Remove unused dependencies
+sudo apt search nginx   # Search for a package
+DNF (Fedora, RHEL, CentOS)
+sudo dnf check-update   # Check for updates
+sudo dnf update         # Update all packages
+sudo dnf install nginx  # Install a package
+sudo dnf remove nginx   # Remove a package
+Pacman (Arch Linux)
+sudo pacman -Syu        # Sync and update all packages
+sudo pacman -S nginx    # Install a package
+sudo pacman -R nginx    # Remove a package
+Zypper (OpenSUSE)
+sudo zypper refresh     # Refresh package list
+sudo zypper update      # Update all packages
+sudo zypper install nginx  # Install a package
+sudo zypper remove nginx   # Remove a package
+🚀 Best Practices for Using Package Managers
+✅ Always update your package list before installing software:
+sudo apt update && sudo apt upgrade -y
+✅ Use autoremove to clean up unused dependencies:
+sudo apt autoremove
+✅ Enable automatic security updates (Ubuntu):
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure unattended-upgrades
